@@ -4,17 +4,18 @@ require 'gruff'
 module GeneratePdf
   PDF_OPTIONS = {
     # Escolhe o Page size como uma folha A4
-    :page_size   => "A4",
+    # :page_size   => "A4",
+    page_size: [200, 2000],
     # Define o formato do layout como portrait (poderia ser landscape)
     :page_layout => :portrait,
     # Define a margem do documento
-    :margin      => [40, 75]
+    :margin      => [4, 8]
   }
 
   def self.agreement name, details, price
     # Apenas uma string aleatório para termos um corpo de texto pro contrato
     lorem_ipsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec elementum nulla id dignissim iaculis. Vestibulum a egestas elit, vitae feugiat velit. Vestibulum consectetur non neque sit amet tristique. Maecenas sollicitudin enim elit, in auctor ligula facilisis sit amet. Fusce imperdiet risus sed bibendum hendrerit. Sed vitae ante sit amet sapien aliquam consequat. Duis sed magna dignissim, lobortis tortor nec, suscipit velit. Nulla sit amet fringilla nisl. Integer tempor mauris vitae augue lobortis posuere. Ut quis tellus purus. Nullam dolor mauris, egestas varius ligula non, cursus faucibus orci sectetur non neque sit amet tristique. Maecenas sollicitudin enim elit, in auctor ligula facilisis sit amet. Fusce imperdiet risus sed bibendum hendrerit. Sed vitae ante sit amet sapien aliquam consequat."
-
+    lorem_ipsum = "nao te interessa pra vc oh palhaço..."
     Prawn::Document.new(PDF_OPTIONS) do |pdf|
       # Define a cor do traçado
       pdf.fill_color "666666"
@@ -37,7 +38,8 @@ module GeneratePdf
       # Inclui um texto com um link clicável (usando a tag link) no bottom da folha do lado esquerdo e coloca uma cor especifica nessa parte (usando a tag color)
       pdf.text "Link Para o Manul do Prawn clicável", :size => 10, :inline_format => true, :valign => :bottom, :align => :left
       # Inclui em baixo da folha do lado direito a data e o némero da página usando a tag page
-      pdf.number_pages "Gerado: #{(Time.now).strftime("%d/%m/%y as %H:%M")} - Página ", :start_count_at => 0, :page_filter => :all, :at => [pdf.bounds.right - 140, 7], :align => :right, :size => 8
+    #   pdf.number_pages "Gerado: #{(Time.now).strftime("%d/%m/%y as %H:%M")} - Página ", :start_count_at => 0, :page_filter => :all, :at => [pdf.bounds.right - 140, 7], :align => :right, :size => 8
+      pdf.page.dictionary.data[:MediaBox] = [0, pdf.y - 10, 200, 2000]
       # Gera no nosso PDF e coloca na pasta public com o nome agreement.pdf
       pdf.render_file('public/agreement.pdf')
     end
